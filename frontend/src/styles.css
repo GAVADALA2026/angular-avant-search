@@ -1,0 +1,6 @@
+body { font-family: Arial, Helvetica, sans-serif; margin: 16px; }
+.container { max-width: 900px; margin: auto; }
+.search-box { display:flex; gap:8px; margin-bottom:12px; }
+.result { padding:8px; border-bottom:1px solid #eee; }
+.result:hover { background:#fafafa; }
+.page { border:1px solid #eaeaea; padding:12px; margin-top:12px; }
