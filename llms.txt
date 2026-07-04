@@ -1,0 +1,36 @@
+Project: angular-avant-search
+Purpose: Metadata and usage examples for agents that should interact with this repo's LLM endpoints.
+
+Endpoints (backend):
+- GET /api/search?q={query}    -> returns lunr search results (slug, snippet, score)
+- GET /api/page/{slug}         -> returns full markdown, frontmatter and HTML
+- POST /api/llm {query, top_k} -> returns LLM answer (requires OPENAI_API_KEY on server)
+- POST /api/reindex            -> rebuild the lunr index from markdown files
+
+Recommended retrieval pipeline for agents:
+1. Call /api/search?q=USER_QUERY to get top candidates.
+2. Fetch full page(s) via /api/page/:slug for the top_k results.
+3. Assemble context: include title + first ~1500-2000 chars of each page.
+4. Call /api/llm (or your external LLM) with the user query and the assembled context.
+
+System prompt (recommended):
+"You are an assistant that answers user queries using the provided wiki context. Answer concisely in Italian (<= 150 words), and always cite the titles of pages used in square brackets. If information is missing, respond 'Non ci sono informazioni sufficienti' and list pages that might be relevant. Do not hallucinate facts."
+
+Agent usage example (pseudocode):
+
+search = GET /api/search?q=...  # get slugs
+pages = [GET /api/page/{slug} for slug in top_k]
+context = concat(titles + excerpts)
+response = POST /api/llm {"query": user_query, "top_k": top_k}
+
+Environment variables (backend):
+- OPENAI_API_KEY (required for /api/llm)
+- OPENAI_API_URL (optional, default: https://api.openai.com/v1/chat/completions)
+- OPENAI_MODEL (optional)
+
+Notes:
+- The backend's LLM endpoint adds retrieval context automatically; prefer using /api/llm when available.
+- Do not send secret keys to the frontend. Keep the LLM key on the server.
+- Frontend base URL: http://localhost:3333/api (changeable in src/app/search.service.ts)
+
+Contact: GAVADALA2026
