@@ -5,39 +5,29 @@
   "scripts": {
     "start": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build",
-    "test": "ng test --watch=false --browsers=PuppeteerHeadless",
-    "test:watch": "ng test"
+    "lint": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.spec.json",
+    "test": "ng test frontend",
+    "test:ci": "ng test frontend --watch=false --coverage"
   },
-  "engines": {
-    "node": ">=18.10.0",
-    "npm": ">=10"
-  },
-  "packageManager": "npm@10.8.2",
   "dependencies": {
-    "@angular/animations": "^16.2.0",
-    "@angular/common": "^16.2.0",
-    "@angular/compiler": "^16.2.0",
-    "@angular/core": "^16.2.0",
-    "@angular/forms": "^16.2.0",
-    "@angular/platform-browser": "^16.2.0",
-    "@angular/platform-browser-dynamic": "^16.2.0",
-    "@angular/router": "^16.2.0",
+    "@angular/animations": "^22.1.4",
+    "@angular/common": "^22.1.4",
+    "@angular/compiler": "^22.1.4",
+    "@angular/core": "^22.1.4",
+    "@angular/forms": "^22.1.4",
+    "@angular/platform-browser": "^22.1.4",
+    "@angular/platform-browser-dynamic": "^22.1.4",
+    "@angular/router": "^22.1.4",
     "rxjs": "^7.8.0",
-    "tslib": "^2.4.0",
-    "zone.js": "^0.13.0"
+    "tslib": "^2.4.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.0",
-    "@angular/cli": "^16.2.0",
-    "@angular/compiler-cli": "^16.2.0",
-    "@types/jasmine": "^4.3.6",
-    "jasmine-core": "^4.6.1",
-    "karma": "^6.4.2",
-    "karma-chrome-launcher": "^3.2.0",
-    "karma-coverage": "^2.2.1",
-    "karma-jasmine": "^5.1.0",
-    "karma-jasmine-html-reporter": "^2.1.0",
-    "puppeteer": "^24.0.0",
-    "typescript": "~5.1.6"
+    "@angular/build": "^22.1.6",
+    "@angular/cli": "^22.1.6",
+    "@angular/compiler-cli": "^22.1.4",
+    "@vitest/coverage-v8": "^4.1.11",
+    "jsdom": "^28.1.0",
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.11"
   }
 }
