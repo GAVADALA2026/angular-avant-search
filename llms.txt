@@ -4,8 +4,7 @@ Purpose: Metadata and usage examples for agents that should interact with this r
 Endpoints (backend):
 - GET /api/search?q={query}    -> returns lunr search results (slug, snippet, score)
 - GET /api/page/{slug}         -> returns full markdown, frontmatter and HTML
-- POST /api/llm {query, top_k} -> returns LLM answer (requires OPENAI_API_KEY on server)
-- POST /api/reindex            -> rebuild the lunr index from markdown files
+- POST /api/llm {query, top_k} -> returns LLM answer (requires OPENAI_API_KEY on server; query <= 500 chars, top_k 1-10)
 
 Recommended retrieval pipeline for agents:
 1. Call /api/search?q=USER_QUERY to get top candidates.
@@ -27,10 +26,13 @@ Environment variables (backend):
 - OPENAI_API_KEY (required for /api/llm)
 - OPENAI_API_URL (optional, default: https://api.openai.com/v1/chat/completions)
 - OPENAI_MODEL (optional)
+- LLM_UPSTREAM_TIMEOUT_MS (optional, 1000-120000; default 15000)
+- CORS_ORIGINS (comma-separated exact http/https browser origins; no wildcard)
 
 Notes:
 - The backend's LLM endpoint adds retrieval context automatically; prefer using /api/llm when available.
 - Do not send secret keys to the frontend. Keep the LLM key on the server.
+- `/api/reindex` is intentionally not public; restart the backend to rebuild the index.
 - Frontend base URL: http://localhost:3333/api (changeable in src/app/search.service.ts)
 
 Contact: GAVADALA2026
