@@ -42,7 +42,8 @@ Endpoint utili:
 - GET /api/page/:slug — recupera pagina (markdown + html)
 - GET /api/search?q=term — ricerca full-text (lunr)
 - POST /api/llm {"query":"...","top_k":3} — risposta basata su retrieval (richiede OPENAI_API_KEY)
-- POST /api/reindex — ricostruisce l'indice dai file markdown
+
+Il reindex avviene al riavvio del backend; non esiste un endpoint pubblico per attivarlo.
 
 Esempio curl:
 
@@ -77,13 +78,18 @@ sources: [raw/papers/example.md]
 Contenuto della pagina...
 ```
 
-- Dopo aver aggiunto o modificato file, chiamare `POST /api/reindex` oppure riavviare il backend per aggiornare l'indice.
+- Dopo aver aggiunto o modificato file, riavviare il backend per ricostruire l'indice. L'endpoint pubblico di reindex non è esposto.
 
 ## Configurazione LLM
 L'endpoint LLM sul backend è opzionale e richiede una chiave impostata in `OPENAI_API_KEY`.
 Il backend invia al fornitore LLM il contesto dei documenti recuperati dalla ricerca e una prompt che richiede risposte concise con citazione dei titoli.
 
 Importante: NON esporre la chiave LLM nel frontend. Impostare la chiave solo sul server.
+Configurare inoltre `CORS_ORIGINS` con una allowlist separata da virgole di origini
+esatte; senza questa variabile, il backend non abilita richieste browser
+cross-origin. `/api/llm` limita `query` a 500 caratteri, `top_k` a 1–10, e
+applica 10 richieste al minuto per IP. Vedere `api/README.md` per
+`LLM_UPSTREAM_TIMEOUT_MS` e tutti i dettagli operativi.
 
 ## Deploy
 - Frontend: `npm run build` in `frontend/` e servire la cartella `dist/` su un web server (o usare GitHub Pages / Netlify).
