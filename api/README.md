@@ -2,7 +2,7 @@ Wiki-LLM minimal API
 
 Setup
 1. cd api
-2. npm install
+2. npm ci
 3. (Optional) set OPENAI_API_KEY, OPENAI_API_URL, OPENAI_MODEL env vars to enable /api/llm
 4. npm start
 
@@ -18,6 +18,6 @@ The server indexes markdown files located in the repository root under:
 - entities/
 - concepts/
 - comparisons/
-- raw/
+- raw/ (incluse le sottocartelle, ad esempio `raw/papers/`)
 
 The LLM endpoint is optional and requires an API key.
