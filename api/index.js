@@ -16,26 +16,38 @@ const SEARCH_DIRS = ['entities', 'concepts', 'comparisons', 'raw'];
 
 function loadDocs() {
   const docs = [];
-  for (const d of SEARCH_DIRS) {
-    const dir = path.join(WIKI_DIR, d);
-    if (!fs.existsSync(dir)) continue;
-    const files = fs.readdirSync(dir).filter(f => f.endsWith('.md'));
-    for (const f of files) {
+
+  function readDirectory(dir) {
+    const entries = fs.readdirSync(dir, {withFileTypes: true});
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        readDirectory(full);
+        continue;
+      }
+      if (!entry.isFile() || !entry.name.endsWith('.md')) continue;
+
       try {
-        const full = path.join(dir, f);
         const raw = fs.readFileSync(full, 'utf8');
         const parsed = matter(raw);
-        const slug = f.replace(/\.md$/, '');
+        const relativePath = path.relative(WIKI_DIR, full);
+        const slug = relativePath.replace(/\\.md$/, '').split(path.sep).join('--');
         docs.push({
           slug,
-          path: path.relative(WIKI_DIR, full),
+          path: relativePath,
           frontmatter: parsed.data || {},
           content: parsed.content || ''
         });
       } catch (err) {
-        console.error('Failed to read', f, err.message);
+        console.error('Failed to read', full, err.message);
       }
     }
+  }
+
+  for (const d of SEARCH_DIRS) {
+    const dir = path.join(WIKI_DIR, d);
+    if (!fs.existsSync(dir)) continue;
+    readDirectory(dir);
   }
   return docs;
 }
@@ -148,4 +160,8 @@ app.post('/api/reindex', (req, res) => {
 });
 
 const PORT = process.env.PORT || 3333;
-app.listen(PORT, () => console.log(`wiki-llm API listening on ${PORT}, docs=${docs.length}`));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`wiki-llm API listening on ${PORT}, docs=${docs.length}`));
+}
+
+module.exports = {app, loadDocs, SEARCH_DIRS, WIKI_DIR};

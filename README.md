@@ -19,13 +19,13 @@ Indice
 Questo repository mostra una pipeline semplice: markdown (entities/, concepts/, comparisons/, raw/) vengono indicizzati con lunr (backend) e resi interrogabili tramite REST. Il frontend Angular fornisce una UI per ricerca keyword e una chiamata LLM tramite il backend.
 
 ## Requisiti
-- Node.js >= 16
-- npm
+- Node.js 20.19.0 (vedere `.nvmrc`)
+- npm 10.8.2 (dichiarato nei `package.json`)
 - (Opzionale) chiave API per LLM (es. OpenAI)
 
 ## Avvio rapido — Backend
 1. Aprire una shell in `api/`
-2. npm install
+2. npm ci
 3. (Opzionale) esportare la chiave LLM se si usa l'endpoint LLM:
 
    export OPENAI_API_KEY="sk-..."
@@ -52,9 +52,11 @@ curl -X POST http://localhost:3333/api/llm -H 'Content-Type: application/json' -
 
 ## Avvio rapido — Frontend
 1. Aprire una shell in `frontend/`
-2. npm install
+2. npm ci
 3. npm start
 4. Aprire http://localhost:4200
+
+Per le verifiche riproducibili, eseguire `npm test` (Karma/ChromeHeadless tramite Puppeteer) e `npm run build` in `frontend/`, e `npm test` in `api/`.
 
 Nota: il frontend usa `src/app/search.service.ts` e punta a `http://localhost:3333/api` come base. Cambiare se il backend è remoto.
 
